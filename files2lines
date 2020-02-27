@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [[ "$#" -lt 1 ]]; then
+  echo "Usage: files2lines [FILES]
+
+Examples:
+  files2lines datafolder/*.txt > datafolder/all.txt
+"
+exit 0
+fi
+
+files=$1
+if [[ "$#" -gt 1 ]]; then
+  files=()
+  for file in $@; do 
+    files+=" $file"
+  done
+fi
+
+# first remove empty strings (including lines with only spaces)
+# then, matching only ending lines, append a line break
+find $files -type f -exec sed -e '/^\s*$/d' -e '$s/$/\n/' {} \;
