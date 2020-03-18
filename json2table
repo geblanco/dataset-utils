@@ -10,7 +10,15 @@ parser.add_argument('--transpose', '-t', action='store_true',
     help='Whether to transpose data or not')
 
 flags = parser.parse_args()
-data = pd.Series(json.load(open(flags.data, 'r'))).to_frame()
+def load_data_to_df(path):
+  raw_data = json.load(open(path, 'r'))
+  try:
+    data = pd.DataFrame(raw_data)
+  except:
+    data = pd.DataFrame(dict(value=raw_data))
+  return data
+
+data = load_data_to_df(flags.data)
 
 if flags.transpose:
   data = data.transpose()
